@@ -1,6 +1,7 @@
 const questionContainer = document.getElementById('quiz-question-container');
 const answersContainer = document.getElementById('quiz-answers-container');
 const answerList = document.getElementById('answers');
+const anwerListItems = document.querySelectorAll('li');
 const submitBtn = document.getElementById('submit-quiz-answer-btn');
 const quitBtn = document.getElementById('quit-quiz-btn');
 const questions = [
@@ -86,7 +87,6 @@ const shuffleQuestions = () => {
         let quest = tmpQuestions.splice(question, 1);
         gameQuestions.push(...quest);
     }
-    console.log(gameQuestions);
     return gameQuestions;
 
 }//FUNKAR
@@ -98,3 +98,11 @@ const getQuestion = () => {
 const assignQuestion = () => {
     showedQuestion = getQuestion();
 }//FUNKAR
+
+const showQuestion = () => {
+    let question = assignQuestion();
+    console.log(question);
+    return answerList.innerHTML = `${question}`;
+}
+
+showQuestion();
