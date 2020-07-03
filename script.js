@@ -1,108 +1,157 @@
-const questionContainer = document.getElementById('quiz-question-container');
-const answersContainer = document.getElementById('quiz-answers-container');
-const answerList = document.getElementById('answers');
-const anwerListItems = document.querySelectorAll('li');
-const submitBtn = document.getElementById('submit-quiz-answer-btn');
-const quitBtn = document.getElementById('quit-quiz-btn');
-const questions = [
-     {
-        question: 'hur många fingrar har en hand?',
-        answer1: 5,
-        answer2: 10,
-        answer3: 15,
-        rightAnswer: 'answer1'
+const quizContainer = document.getElementById('quiz-container');
+const scoreField = document.getElementById('examine-answer');
+const submitBtn = document.getElementById('submit-btn');
+const cancelBtn = document.getElementById('quit-btn');
+//quiz-frågor
+const quizQuestions = [
+  {
+    question: 'What breed is Scooby Doo?',
+    answers: {
+      a: 'Corgi',
+      b: 'Afghan Hound',
+      c: 'Great Dane',
     },
-    {
-        question: 'hur många tår har en fot?',
-        answer1: 33,
-        answer2: 12,
-        answer3: 5,
-        rightAnswer: 'answer3'
+    correctAnswer: 'c',
+  },
+  {
+    question: ' Which breed of dog is a playing piece in Monopoly?',
+    answers: {
+      a: 'Basset Hound',
+      b: 'Scottish Terrier',
+      c: 'Cairn Terrier',
     },
-    {
-        question: 'hur många ben har en hund?',
-        answer1: 5,
-        answer2: 4,
-        answer3: 8,
-        rightAnswer: 'answer2'
+    correctAnswer: 'b',
+  },
+  {
+    question: 'What name is given to a crossbreed dog with beagle and pug parents?',
+    answers: {
+      a: 'Puggle',
+      b: 'Pugabull',
+      c: 'Beabull',
     },
-    {
-        question: 'hur många ben har en papegoja?',
-        answer1: 2,
-        answer2: 7,
-        answer3: 8,
-        rightAnswer: 'answer1'
+    correctAnswer: 'a',
+  },
+  {
+    question: 'Name the cleverest breed of dog:',
+    answers: {
+      a: 'Dalmatian',
+      b: 'Border Collie',
+      c: 'Australian Sheperd',
     },
-    {
-        question: 'Vad heter Sveriges huvudstad?',
-        answer1: 'Stockholm',
-        answer2: 'Malmö',
-        answer3: 'Göteborg',
-        rightAnswer: 'answer1'
+    correctAnswer: 'b',
+  },
+  {
+    question: 'Which of the dog’s senses is most highly developed?',
+    answers: {
+      a: 'Taste',
+      b: 'Sight',
+      c: 'Smell',
     },
-    {
-        question: 'Vilken dag är Smålands nationaldag?',
-        answer1: '6:e juni',
-        answer2: '12:e augusti',
-        answer3: 'Fössta tosstan i mass',
-        rightAnswer: 'answer3'
+    correctAnswer: 'c',
+  },
+  {
+    question: 'How many teeth does a fully grown adult dog have?',
+    answers: {
+      a: '42',
+      b: '58',
+      c: '24',
     },
-    {
-        question: 'Vad heter Sveriges stadsminister?',
-        answer1: 'Stefan Löfven',
-        answer2: 'Lars Ohly',
-        answer3: 'Jimmie Åkesson',
-        rightAnswer: 'answer1'
+    correctAnswer: 'a',
+  },
+  {
+    question: 'What breed was the oldest dog ever to have lived?',
+    answers: {
+      a: 'Hamiltonstovare',
+      b: 'Golden Retriever',
+      c: 'Australian Cattle Dog',
     },
-    {
-        question: 'Vad kallas din mammas mor?',
-        answer1: 'gammelmor',
-        answer2: 'mormor',
-        answer3: 'morfar',
-        rightAnswer: 'answer2'
+    correctAnswer: 'c',
+  },
+  {
+    question: 'Which breed yodels instead of barks?',
+    answers: {
+      a: 'Basenji',
+      b: 'Huskita',
+      c: 'Icelandic Sheepdog',
     },
-    {
-        question: 'hur många ben har en myra?',
-        answer1: 5,
-        answer2: 4,
-        answer3: 8,
-        rightAnswer: 'answer3'
+    correctAnswer: 'a',
+  },
+  {
+    question: 'Which dog breed is the favourite of The Queen of England?',
+    answers: {
+      a: 'Miniature Schnauzer',
+      b: 'Poodle',
+      c: 'Corgi',
     },
-    {
-        question: 'hur många år går det på ett kvartal?',
-        answer1: 25,
-        answer2: 5,
-        answer3: 8,
-        rightAnswer: 'answer1'
+    correctAnswer: 'c',
+  },
+  {
+    question: 'Which breed was once considered sacred in China?',
+    answers: {
+      a: 'Shi-Tzu',
+      b: 'Pekinese',
+      c: 'Chow Chow',
+    },
+    correctAnswer: 'b',
+  },
+];
+const buildQuiz = () => {
+  //variabel för HTML-output
+  const output = [];
+  //För varje fråga...
+  quizQuestions.forEach((currentQuestion, questionNumber) => {
+    //variabel för lista av svarsalternativ
+    const answers = [];
+    //och för varje tillgängligt svar...
+    for (letter in currentQuestion.answers) {
+      //lägg till en HTML-radio-btn
+      answers.push(
+        `<label>
+                <input type="radio" name="question${questionNumber}" value="${letter}">
+                ${letter} : ${currentQuestion.answers[letter]}
+                </label>`
+      );
     }
-]
-let showedQuestion;
-let gameQuestions = [];
+    //lägg till denna fråga och svarsalternativ i output-arrayen
+    output.push(
+      `<div class="question"> ${currentQuestion.question} </div>
+            <div class="answers"> ${answers.join('')}</div>`
+    );
+  });
+  //kombinera vår output-lista till en string av HTML och lägg upp den på sidan
+  quizContainer.innerHTML = output.join('');
+};
 
-const shuffleQuestions = () => {
-    let tmpQuestions = [...questions];
-    let question;
-    while(tmpQuestions.length > 0) {
-        question = (Math.floor(Math.random()* tmpQuestions.length));
-        let quest = tmpQuestions.splice(question, 1);
-        gameQuestions.push(...quest);
+const showResults = () => {
+  //samla svar-containers från quizet
+  const answerContainers = quizContainer.querySelectorAll('.answers');
+  //håll koll på användarens rätta svar
+  let numCorrect = 0;
+  //för varje fråga...
+  quizQuestions.forEach((currentQuestion, questionNumber) => {
+    //hitta valt svar till frågan
+    const answerContainer = answerContainers[questionNumber];
+    const selector = `input[name=question${questionNumber}]:checked`;
+    const userAnswer = (answerContainer.querySelector(selector) || {})
+      .nodeValue;
+    //om svaret är rätt
+    if (userAnswer === currentQuestion.correctAnswer) {
+      //lägg till 1 till antalet korrekta svar
+      numCorrect++;
+      //ändra färg på svaret till grönt
+      answerContainers[questionNumber].style.color = 'green';
     }
-    return gameQuestions;
+    //om svaret är fel eller tomt
+    else {
+      //ändra färg på svaret till rött
+      answerContainers[questionNumber].style.color = 'red';
+    }
+  });
+  //visa antalet korrekta svar av totalt antal svar
+  scoreField.innerHTML = `${numCorrect} out of ${quizQuestions.length}`;
+};
 
-}//FUNKAR
+//visa quizet på en gång
+buildQuiz();
 
-const getQuestion = () => {
-    return gameQuestions.shift();
-}//FUNKAR
-
-const assignQuestion = () => {
-    showedQuestion = getQuestion();
-}//FUNKAR
-
-const showQuestion = () => {
-    let question = assignQuestion();
-    console.log(question);
-    return answerList.innerHTML = `${question}`;
-}
-
-showQuestion();
+submitBtn.addEventListener('click', showResults);
