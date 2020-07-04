@@ -133,7 +133,7 @@ const showResults = () => {
     const answerContainer = answerContainers[questionNumber];
     const selector = `input[name=question${questionNumber}]:checked`;
     const userAnswer = (answerContainer.querySelector(selector) || {})
-      .nodeValue;
+      .value;
     //om svaret är rätt
     if (userAnswer === currentQuestion.correctAnswer) {
       //lägg till 1 till antalet korrekta svar
